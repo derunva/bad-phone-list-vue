@@ -44,6 +44,7 @@
 
 <script>
 import PhoneMaskInput from  "vue-phone-mask-input";
+import axios from 'axios';
 export default {
   name: 'HelloWorld',
   components:{
@@ -81,7 +82,15 @@ export default {
         name: this.name,
         phone: this.phone
       }
-      this.contacts.push(contact);
+      axios.post("http://localhost:4000/", contact)
+      .then((data)=>{
+        console.log(data)
+        this.contacts.push(data.data);
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+      // this.contacts.push(contact);
       // this.contacts = this.contacts.concat(contact)
       this.name = "";
       this.phone = "";
@@ -94,6 +103,16 @@ export default {
       this.contacts[index]['status']= status
       this.$set(this.contacts, index, this.contacts[index]);
     }
+  },
+  mounted(){
+    axios.get("http://localhost:4000/")
+    .then((data) =>{
+      console.log(data, this)
+      this.contacts = data.data;
+    })
+    .catch((err)=>{
+
+    })
   }
 }
 </script>
